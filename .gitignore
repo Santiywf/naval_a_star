@@ -1,3 +1,24 @@
 #ignorar version antigua
 
 matlab/A_star.m
+
+*.asv
+
+*.mat
+
+# Archivos compilados MEX (binarios específicos del sistema operativo)
+*.mex*
+*.mexa64
+*.mexw64
+*.mexw32
+*.mexmaci64
+*.mexmaca64
+
+# Archivos y carpetas de caché de Simulink
+*.slxc
+slprj/
+sfprj/
+
+# Archivos de reportes, logs y errores
+*.log
+*.err
