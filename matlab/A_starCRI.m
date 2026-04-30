@@ -1,8 +1,19 @@
-function [path] = A_starCRI(nodo0,nodo_final, grid_nodos, obstaculos)
+function [path] = A_starCRI(ship0, nodo_final, grid_nodos, obstaculos, L)
+%% A_starCRI
+%   calcula el camino mas optimo para poder evitar uno o varios barcos
+%   usando A* y aplicando reglas de navegacion y un indice de colision
+%   ship0 -> objeto barco que ha de moverse
+%   nodo_final -> punto final al que ha de llegar el barco origen
+%   grid_nodos -> mapa de nodos por el que podra moverse el barco
+%   obstaculos -> lista de barcos a evitar dentro del grid
+%   L -> eslora del barco de origen
     
     lista = []; % Vector de nodos
 
     % Nodo inicial
+    nodo0 = nodo();
+    nodo0.x = ship0.position(1);
+    nodo0.x = ship0.position(2);
     nodo0.g = 0;
     nodo0.h = calculo_heuristica(nodo0, nodo_final);
     nodo0.f = nodo0.g + nodo0.h;
@@ -40,20 +51,24 @@ function [path] = A_starCRI(nodo0,nodo_final, grid_nodos, obstaculos)
             % =======================================================
             % INYECCIÓN DEL PAPER: FILTROS DE SEGURIDAD (CRI y COLREG)
             % =======================================================
-            % 1. Verificar Zona de Penalización (COLREGs)
-            % if esta_en_zona_penalizacion(neighbor, targetShips)
-            %     continue;
-            % end
-            %
-            % 2. Verificar Riesgo de Colisión (CRI)
-            % cri = calcular_CRI(neighbor, targetShips);
-            % if cri >= 0.7
-            %     continue;
-            % end
+            %1. Verificar Zona de Penalización (COLREGs)
+            for j = 1:lenght(obstaculos)
+                if in_penalty_zone(neighbor, obstaculos(j))
+                    continue;
+                end
+            end
+
+            %2. Verificar Riesgo de Colisión (CRI)
+            for j = 1:length(obstaculos)
+                cri = CRI(ship0, obstaculos(j), L);
+                if cri >= 0.7
+                    continue;
+                end
+            end
             % =======================================================
 
             %calculo costo temporal para moverse al vecino(ETA)
-            costo_paso = distancia(nodo_actual, vecino);
+            costo_paso = calcular_heuristica(nodo_actual, vecino);
             g_next = nodo_actual.g + costo_paso;
             
             %en caso de haber un camino mas rapido a ese vecino

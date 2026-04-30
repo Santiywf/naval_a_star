@@ -1,9 +1,21 @@
-function cri = CRI(S0, V0, phi0, ST, VT, phiT, L0)
+function cri = CRI(ship0,obstaculo, L0)
 %% Funcion de calculo del CRI(Collision Risk Index) 
 %   se calcula el indice de riesgo de colision entre el barco propio y el
-%   barco objetivo(revisar si se calcula todo aqui o no)
+%   barco objetivo
+%   S0, V0, phi0 -> posicion, velocidad y rumbo del barco de origen
+%   obstaculo -> objeto ship que representa el barco con el que se ha de
+%   caluclar el CRI
+%   L0 -> eslora barco de origen
 
 %% CALCULO VARIABLES PARA CRI
+
+S0 = ship0.position;
+V0 = ship0.SOG;
+phi0 = ship0.COG;
+
+ST = obstaculo.position;
+VT = obstaculo.SOG;
+phiT = obstaculo.COG;
 
 % aT -> Azimuth
 dx = ST(1) - S0(1);
