@@ -21,6 +21,7 @@ phiT = obstaculo.COG;
 dx = ST(1) - S0(1);
 dy = ST(2) - S0(2);
 aT = atan2(dx ,dy);
+aT = rad2deg(aT);
 
 % DR -> Relative Distance
 DR = sqrt((ST(1) - S0(1))^2 + (ST(2) + S0(2))^2);
@@ -58,12 +59,13 @@ end
 
 % thetaT -> Marcacion relativa
 thetaT = aT - phiT;
+thetaT = mod(thetaT, 360);
 
 % DCPA -> Distance at closest point of approach
-DCPA = DR * sin(thetaR - aT - pi);
+DCPA = DR * sin(phiR - aT - pi);
 
 % TCPA -> Time at closest point of approach
-TCPA = DR * (cos(thetaR - aT - pi))/VR;
+TCPA = DR * (cos(phiR - aT - pi))/VR;
 
 
 % D1 -> Distance of last action
@@ -73,11 +75,11 @@ D1 = (8 - 12)*L0;
 D2 = 1.7*cos((thetaT - 19)*pi/180) + sqrt(4.4 + 2.89*(cos((thetaT - 19)*pi/180))^2);
 
 % C -> Collision angle (0 <= C <= 180)
-C = acos((V0x*VTx + V0y*VTy)/sqrt((Vox^2 + V0y^2)*(VTx^2 + VTy^2)));
+C = acos((V0x*VTx + V0y*VTy)/sqrt((V0x^2 + V0y^2)*(VTx^2 + VTy^2)));
 C = C*180/pi; % Se pasa a grados porque es como se evalua en la literatura
 
 % d1 -> Smallest encounter distance
-if thetaT  >= 0 && thetaT < 112.5*pi/180
+if thetaT  >= 0 && thetaT < 112.5
     d1 = 1.1-0.2*thetaT/180;
 elseif thetaT >= 112.5 && thetaT < 180
     d1 = 1.0 - 0.4*thetaT/180;
@@ -94,15 +96,18 @@ d2 = 2*d1;
 
 % t1 -> Ship collision time
 if abs(DCPA) <= D1 
-    t1 = (sqrt(D1^2 -DCPA^2))/Vr;
+    t1 = (sqrt(D1^2 -DCPA^2))/VR;
 elseif abs(DCPA) > D1
-    t1 = (D1 -abs(DCPA))/Vr;
+    t1 = (D1 -abs(DCPA))/VR;
 else
     error('error calculando t1, revise DCPA');
 end
 
 % t2 -> Avoidance time
-t2 = (sqrt(12^2 - DCPA^2))/Vr;
+t2 = (sqrt(12^2 - DCPA^2))/VR;
+
+% epsilon(E) ->velocity ratio of the target ship to the own ship
+E = VT/V0;
 
 %% CALCULO uDCPA
 if abs(DCPA) <= d1
@@ -143,8 +148,8 @@ u0T = 0.5*(cos(thetaT - (19*pi/180)) + sqrt(440/289 + (cos(thetaT - 19*pi/180))^
 uE = 1/(1+(2/E*sqrt(E*E+1+2*E*sin(C))));
 
 %% CALCULO FINAL CRI
-U = [uDCPA uTCPA uDR u0T uE];
-W = [0.4,0.367,0.133,0.067,0.033];
+U = [uDCPA; uTCPA; uDR; u0T; uE];
+W = [0.4 0.367 0.133 0.067 0.033];
 cri = W * U;
 
 end

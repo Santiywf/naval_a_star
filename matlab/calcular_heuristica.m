@@ -22,8 +22,6 @@ function h = calcular_heuristica(nodo_a,nodo_b, sogA, sogB)
     c = 2*atan2(sqrt(a), sqrt(1 - a));
 
     distancia = R * c;
-    
-
 
     h = 2*(distancia)/(sogA + sogB);
     

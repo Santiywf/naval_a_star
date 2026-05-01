@@ -30,7 +30,11 @@ function pos = in_penalty_zone(nodo, targetShip)
     diff = mod(a - targetShip.COG + 180, 360) - 180;
 
     if diff >= area_pen_min && diff <= area_pen_max
-        pos = true;
+        pos = true
+        nodo.x
+        nodo.y
+        targetShip.position(1)
+        targetShip.position(2)
         return
     end
 

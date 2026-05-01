@@ -9,22 +9,16 @@ classdef nodo < handle
         h = 0               % heuristica(t estimado hasta el destino final)
         f = inf             % costo total(g + h)
         parent = []         % referencia al nodo anterior(para reconstruir la ruta)
-        visitado = false     % para la lista de visitados
+        visitado = false    % para la lista de visitados
     end
 
     methods
         %CONSTRUCTOR
         function obj = nodo(x, y)
-            obj.x = x;
-            obj.y = y;
-        end
-
-        function reset(obj)
-            obj.g = inf;
-            obj.h = 0;            
-            obj.f = inf;        
-            obj.parent = [];     
-            obj.visitado = false;  
+          if nargin > 0 % Solo asigna si se pasan argumentos
+              obj.x = x;
+              obj.y = y;
+          end
         end
     end
 end
